@@ -9,7 +9,7 @@ metadata:
 spec:
 selector:
     project: roboshop
-    component: mongodb
+    environment: dev
     tier: db
     ports:
     - protocol: TCP
