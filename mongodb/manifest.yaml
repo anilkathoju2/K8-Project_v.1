@@ -6,15 +6,16 @@ metadata:
  labels:
       environment: dev
       project: roboshop
+      tier: db
 spec:
-  selector:
-    project: roboshop
-    environment: dev
-    tier: db
-    ports:
-    - protocol: TCP
-      port: 27017  # servcie port
-      targetPort: 27017 # container
+ selector:
+   environment: dev
+   project: roboshop
+   tier: db
+ ports:
+  - protocol: TCP
+    port: 27017  # servcie port
+    targetPort: 27017 # container
 
 ---
 
