@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -18,26 +19,24 @@ spec:
     targetPort: 27017 # container
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongodb
+  name: mongodb-headless
   namespace: roboshop
   labels:
     environment: dev
     project: roboshop
     tier: db
 spec:
- clusterIP: None
- selector: 
-  labels:
+  clusterIP: None
+  selector: 
     environment: dev
     project: roboshop
     tier: db
- ports:
-  - protocol: TCP
-    port: 27017  # servcie port
-    targetPort: 27017 # container   
+  ports:
+    - protocol: TCP
+      port: 27017  # servcie port
+      targetPort: 27017 # container   
      
 
