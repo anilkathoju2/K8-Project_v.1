@@ -4,9 +4,9 @@ metadata:
  name: mongodb
  namespace: roboshop
  labels:
-      environment: dev
-      project: roboshop
-      tier: db
+    environment: dev
+    project: roboshop
+    tier: db
 spec:
  selector:
    environment: dev
@@ -19,5 +19,25 @@ spec:
 
 ---
 
-# apiVersion: v1
-# kind: 
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: roboshop
+  labels:
+    environment: dev
+    project: roboshop
+    tier: db
+spec:
+ clusterIP: None
+ selector: 
+  labels:
+    environment: dev
+    project: roboshop
+    tier: db
+ ports:
+  - protocol: TCP
+    port: 27017  # servcie port
+    targetPort: 27017 # container   
+     
+
