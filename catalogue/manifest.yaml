@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -18,50 +19,50 @@ metadata:
     component: catalogue
     tier: backend
 spec:
-   replicas: 1
-   selector:
-     matchLabels:
+  replicas: 1
+  selector:
+    matchLabels:
       project: roboshop
       component: catalogue
       tier: backend
-   template:
-     metadata:
+  template:
+    metadata:
       labels:
         project: roboshop
         component: catalogue
         tier: backend
-   spec:
-     containers:
-     - name: catalogue
-       image: anilkathoju/catalogue:v1
-       imagePullPolicy: Always
-       envFrom:
-        - configMapRef:
-            name: catalogue
-          ports:
-          - name: liveness-port
+    spec:
+      containers:
+      - name: catalogue
+        image: anilkathoju/catalogue:v1
+        imagePullPolicy: Always
+        envFrom:
+          - configMapRef:
+              name: catalogue
+        ports:
+        - name: liveness-port
           containerPort: 8080
-       resources:
+        resources:
           requests:
             cpu: "100m"
             memory: "128Mi"
           limits:
             cpu: "100m"
             memory: "128Mi"
-       readinessProbe:
+        readinessProbe:
           httpGet:
             path: /health
             port: liveness-port
           failureThreshold: 1
           periodSeconds: 15
-       livenessProbe:
+        livenessProbe:
           httpGet:
             path: /health
             port: liveness-port
           failureThreshold: 1
           periodSeconds: 15
----
 
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -74,10 +75,10 @@ spec:
     tier: backend
   ports:
     - protocol: TCP
-      port: 8080 # service port
-      targetPort: 8080 # container port
----
+      port: 8080
+      targetPort: 8080
 
+---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -101,7 +102,3 @@ spec:
       target:
         type: Utilization
         averageUtilization: 5
-
-
-
-    
