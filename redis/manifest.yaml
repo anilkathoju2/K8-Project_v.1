@@ -53,13 +53,13 @@ spec:
         project: roboshop
         component: redis
         tier: db
-      spec:
-        containers:
+    spec:
+      containers:
+      - name: redis
+        image: redis:7.0
+        volumeMounts:
         - name: redis
-          image: redis:7.0
-          volumeMounts:
-          - name: redis
-            mountPath: /data
+          mountPath: /data
     # This is PVC
   volumeClaimTemplates:
   - metadata:
