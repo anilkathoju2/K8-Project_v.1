@@ -55,8 +55,8 @@ spec:
             path: /health
             port: liveness-port
           failureThreshold: 1
-          periodSeconds: 15
-          initialDelaySeconds: 60
+          periodSeconds: 25
+          initialDelaySeconds: 120
         livenessProbe:
           httpGet:
             path: /health
