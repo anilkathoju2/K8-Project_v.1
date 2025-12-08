@@ -44,14 +44,15 @@ spec:
       project: roboshop
       component: redis
       tier: db
-  serviceName: "redis-headless" # this should be head less service name
+  serviceName: "redis-headless"
   replicas: 1
   template:
-      metadata:
-        labels:
-          project: roboshop
-          component: redis
-          tier: db
+    metadata:
+      labels:
+        environment: dev
+        project: roboshop
+        component: redis
+        tier: db
       spec:
         containers:
         - name: redis
@@ -60,14 +61,14 @@ spec:
           - name: redis
             mountPath: /data
     # This is PVC
-      volumeClaimTemplates:
-      - metadata:
-        name: redis
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        storageClassName: "roboshop-ebs"
-        resources:
-          requests:
-            storage: 1Gi
+  volumeClaimTemplates:
+  - metadata:
+      name: redis
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "roboshop-ebs"
+      resources:
+        requests:
+          storage: 1Gi
 
 
