@@ -52,6 +52,7 @@ spec:
     metadata:
       environment: dev
       project: roboshop
+      component: mongodb
       tier: db
     spec:
       containers:
