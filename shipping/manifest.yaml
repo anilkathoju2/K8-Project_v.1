@@ -1,3 +1,111 @@
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: shipping
+#   namespace: roboshop
+# data:
+#   CART_ENDPOINT: "cart:8080"
+#   DB_HOST: "mysql"
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: shipping
+#   namespace: roboshop
+#   # these are replica set labels
+#   labels:
+#     project: roboshop
+#     component: shipping
+#     tier: backend
+# spec:
+#   replicas: 1
+#   selector:
+#     # these labels are used to select pods
+#     matchLabels:
+#       project: roboshop
+#       component: shipping
+#       tier: backend
+#   # pod definition
+#   template:
+#     metadata:
+#       labels:
+#         project: roboshop
+#         component: shipping
+#         tier: backend
+#     spec:
+#       containers:
+#       - name: shipping
+#         image: anilkathoju/shipping:v1
+#         imagePullPolicy: Always
+#         envFrom:
+#         - configMapRef:
+#             name: shipping
+#         ports:
+#         - name: liveness-port
+#           containerPort: 8080
+#         resources:
+#           requests:
+#             cpu: "200m"
+#             memory: "256Mi"
+#           limits:
+#             cpu: "400m"
+#             memory: "512Mi"
+#         readinessProbe:
+#           httpGet:
+#             path: /health
+#             port: liveness-port
+#           failureThreshold: 1
+#           periodSeconds: 25
+#           initialDelaySeconds: 120
+#         livenessProbe:
+#           httpGet:
+#             path: /health
+#             port: liveness-port
+#           failureThreshold: 1
+#           periodSeconds: 15
+#           initialDelaySeconds: 60
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: shipping
+#   namespace: roboshop
+# spec:
+#   selector:
+#     project: roboshop
+#     component: shipping
+#     tier: backend
+#   ports:
+#     - protocol: TCP
+#       port: 8080 # service port
+#       targetPort: 8080 # container port
+# ---
+# apiVersion: autoscaling/v2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: shipping
+#   namespace: roboshop
+#   labels:
+#     project: roboshop
+#     component: shipping
+#     tier: backend
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: shipping
+#   minReplicas: 1
+#   maxReplicas: 10
+#   metrics:
+#   - type: Resource
+#     resource:
+#       name: cpu
+#       target:
+#         type: Utilization
+#         averageUtilization: 5 # 70 is the real value
+
+
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -12,7 +120,6 @@ kind: Deployment
 metadata:
   name: shipping
   namespace: roboshop
-  # these are replica set labels
   labels:
     project: roboshop
     component: shipping
@@ -20,12 +127,10 @@ metadata:
 spec:
   replicas: 1
   selector:
-    # these labels are used to select pods
     matchLabels:
       project: roboshop
       component: shipping
       tier: backend
-  # pod definition
   template:
     metadata:
       labels:
@@ -46,10 +151,10 @@ spec:
         resources:
           requests:
             cpu: "200m"
-            memory: "256Mi"
+            memory: "512Mi"      # Updated request
           limits:
             cpu: "400m"
-            memory: "512Mi"
+            memory: "1Gi"        # Updated limit (container can handle 1GB)
         readinessProbe:
           httpGet:
             path: /health
@@ -63,7 +168,7 @@ spec:
             port: liveness-port
           failureThreshold: 1
           periodSeconds: 15
-          initialDelaySeconds: 60
+          initialDelaySeconds: 120
 ---
 apiVersion: v1
 kind: Service
@@ -77,8 +182,8 @@ spec:
     tier: backend
   ports:
     - protocol: TCP
-      port: 8080 # service port
-      targetPort: 8080 # container port
+      port: 8080
+      targetPort: 8080
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -102,4 +207,10 @@ spec:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 5 # 70 is the real value
+        averageUtilization: 70   # Updated CPU target
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 70   # Memory-based autoscaling at 70%
