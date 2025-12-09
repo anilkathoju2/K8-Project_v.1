@@ -155,20 +155,20 @@ spec:
           limits:
             cpu: "400m"
             memory: "1Gi"        # Updated limit (container can handle 1GB)
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: liveness-port
-          failureThreshold: 1
-          periodSeconds: 25
-          initialDelaySeconds: 120
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: liveness-port
-          failureThreshold: 1
-          periodSeconds: 15
-          initialDelaySeconds: 120
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: liveness-port
+        #   failureThreshold: 1
+        #   periodSeconds: 25
+        #   initialDelaySeconds: 120
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: liveness-port
+        #   failureThreshold: 1
+        #   periodSeconds: 15
+        #   initialDelaySeconds: 120
 ---
 apiVersion: v1
 kind: Service
