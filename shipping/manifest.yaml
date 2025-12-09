@@ -140,7 +140,7 @@ spec:
     spec:
       containers:
       - name: shipping
-        image: anilkathoju/shipping:v1
+        image: rajmdevops/shipping:v1
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
